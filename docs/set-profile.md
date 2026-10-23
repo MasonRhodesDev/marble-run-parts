@@ -4,13 +4,24 @@ Reference for finding or designing parts that plug into the household tube
 marble run. The set is the translucent-tube type sold under names such as
 Marble Genius; published parts made for that name have fit so far.
 
+## Orientation
+
+As marbles and gravity see it, the male end is the TOP of a piece and the
+female socket is the BOTTOM: a marble enters through the male end and leaves
+through the socket into the male end of the piece below. On the official
+piece the male end is inset about 1 mm into the body, with a distinct step
+inside where its 18.5 bore meets the body bore. Parts are drawn in whatever
+orientation prints best and the part file says which.
+
 ## Measured connector (calipers, 2026-10-23)
 
 | Feature | Value | Note |
 |---|---|---|
 | Male end, across arcs | 23.60 mm | round with alternating flats |
-| Male end, across flats | 22.90 mm | six-ish flats, only the arcs touch |
-| Female mouth bore | 23.23 mm | round |
+| Male end, across flats | 22.90 mm | six shallow tangent flats about 4.5 mm wide; only the arcs touch |
+| Female mouth bore | 23.23 mm | round, at the mouth |
+| Female body bore | 23.5 mm | measured deeper in; to confirm whether the mouth is a gripping band with relief behind it |
+| Edge chamfers | cosmetic | official tip and mouth edges are barely broken; ours are print lead-ins |
 | Male end height | 6.4 mm | gripping part, fine chamfer at the tip |
 | Unit height (stacking pitch) | 34.91 mm | body of the base piece |
 | Base piece overall | 41.31 mm | body plus the 6.4 mm male end |
@@ -26,18 +37,19 @@ plain cylinder, so the press is light and self-centring.
 
 ## Fit log for printed parts
 
-Slicer profile in use applies +0.15 mm to holes and -0.05 mm to contours
-(OrcaSlicer, 0.4 mm nozzle, PLA, direct drive extruder, 210 C, 1.5 mm
-retraction at 45 mm/s after fine stringing at 220 C with 1 mm). All CAD
-numbers below are pre-compensation.
+Slicer profile in use (OrcaSlicer, 0.4 mm nozzle, PLA, direct drive, 210 C,
+1.5 mm retraction at 45 mm/s) applies xy_hole_compensation 0.15 and
+xy_contour_compensation -0.05. Both are per side, so a bore prints about
+0.30 wider than drawn and a spigot about 0.10 narrower. The printed sizes in
+the table are estimates on that basis; measure the coupon to settle it.
 
 | Part | CAD | Printed (est.) | Result |
 |---|---|---|---|
 | Diverter inlet, Printables 163082 | male per STL | | perfect |
-| Diverter outlets, Printables 163082 | female 23.75 | ~23.9 | barely too loose on the set's male |
+| Diverter outlets, Printables 163082 | female 23.75 | ~24.05 | barely too loose on the set's male |
 | Diverter paddle, same model | | | loose by design, works |
 | Joyin bowl spigot, Printables 1700829, scaled 0.926 | male 23.6 round | ~23.5 | too small, do not reuse Joyin parts |
-| Fit coupon v1, this repo | female 23.35 / male 23.65 arcs, 22.90 flats, both 18 long | ~23.5 / ~23.55 | socket: perfect at the top end, too tight at the plate end (elephant foot); spigot: fits very well. Lengths cut to 6.5 / 8 and mouth chamfers added in v2 |
+| Fit coupon v1, this repo | female 23.35 / male 23.65 arcs, 22.90 flats, both 18 long | ~23.65 / ~23.55 | socket: perfect at the top end, too tight at the plate end (elephant foot); spigot: fits very well. Lengths cut to 6.5 / 8 and mouth chamfers added in v2 |
 
 Update this table after every fit test. The library constants in
 `lib/marble_set.scad` must match the last row that passed.
@@ -55,11 +67,11 @@ Update this table after every fit test. The library constants in
    least marble + 1.5 mm.
 5. A female socket is plain bore for the exposed male end height plus 1 mm
    clearance (7.4 mm) below its mouth before any other feature: no seat,
-   window, opening or change of diameter in that zone.
-6. A male end extends at least 1 mm up into the body it belongs to
-   (`ms_male_overlap`, enforced by an `assert` in the library). The socket
-   floor sits on top of that overlap, so the joint is never a single wall of
-   layers.
+   window, opening or change of diameter in that zone. Asserted on the drawn
+   depth and verified geometrically by `scripts/check_keepout.sh`.
+6. A male end extends at least 1 mm up into the body it belongs to, as the
+   official piece does (`ms_male_overlap`, asserted). Where a socket ends
+   inside a part, its floor is one wall plus that overlap thick.
 7. Make the body height a whole number of units (`ms_units(n)`, 34.91 mm
    each) so a custom part sits level with official pieces in the same row.
    Body means spigot shoulder to socket mouth; the male end hides inside the
@@ -67,25 +79,21 @@ Update this table after every fit test. The library constants in
    (top pieces, free-standing bases) have an unconstrained height. Socket
    depth is inside the body and does not affect the pitch.
 
-## Declaring features and checking constraints
+## How the rules are enforced
 
-Every part declares what it has and asks the library to check the rules that
-apply, before drawing anything:
+Checks live in the library's drawing modules, on the numbers actually drawn:
+`ms_male_spigot` asserts height, overlap and wall; `ms_female_bore` asserts
+depth, keep-out and lead-in; `ms_passage` asserts marble clearance;
+`ms_check_units(body_h, units)` asserts the stacking pitch. Relations between
+library constants are asserted once at include time.
 
-```openscad
-$ms_features = ["socket", "spigot", "stacks", "marble"];
-$ms_units    = 2;
-ms_check(body_h = ..., socket_depth = ..., passage = ms_bore);
-```
-
-Rules fire only for declared features: `spigot` (1 mm overlap into the body,
-flats below arcs, 2.2 mm wall at the flats), `socket` (plain bore for the male end
-plus 1 mm, 7.4 mm, below the mouth before any seat, window or opening;
-mouth chamfer at least 0.5), `stacks` (body is a whole
-number of units and matches `$ms_units`), `marble` (passage at least marble
-plus 1.5; on by default, declare `no-marble` to skip). A failed rule aborts
-the build with the offending number and the nearest valid one, so
-`scripts/build.sh` cannot produce a non-conforming STL.
+What a part draws around a socket cannot be seen by those asserts, so the
+build also runs `scripts/check_keepout.sh`: every part lists its socket
+mouths in `ms_sockets = [[x, y, z, dir], ...]` and exposes `module part()`,
+and the script renders two probes per socket against the part, one that must
+find nothing inside the bore and one that must find the full wall ring, for
+the keep-out depth. A non-empty probe fails the build. Rules the library
+cannot check (orientation, infill, supports) are advice in this file.
 
 ## Finding published parts
 

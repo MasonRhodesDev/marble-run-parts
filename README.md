@@ -8,7 +8,8 @@ models that fit them.
 - `docs/compatible-models.md`: third-party models that fit (or do not), with links.
 - `lib/marble_set.scad`: the connector as OpenSCAD modules. Every part includes it.
 - `parts/<name>/`: our designs. First one is a mid-run vortex.
-- `scripts/build.sh`: renders every part to `out/*.stl` (needs `openscad`).
+- `scripts/build.sh`: renders every part to `out/*.stl` and runs the keep-out test (needs `openscad`).
+- `scripts/check_keepout.sh`: geometric check that nothing intrudes on a socket for the keep-out depth.
 - `scripts/preview.sh`: PNG previews and cut-away sections for review.
 
 ## Quick start
@@ -28,10 +29,15 @@ Include the library and use its modules instead of drawing the connector:
 
 ```openscad
 include <../../lib/marble_set.scad>;
-difference() {
-    union() { my_body(); ms_male_spigot(); }
-    ms_passage(20);
+ms_sockets = [[0, 0, 0, -1]];          // socket mouths, for the keep-out test
+module part() {
+    difference() {
+        union() { my_body(); translate([0, 0, top]) ms_male_spigot(bore = undef); }
+        translate([0, 0, 8]) mirror([0, 0, 1]) ms_female_bore(8, chamfer = 0.8);
+        ms_passage(20);
+    }
 }
+if (is_undef($ms_no_render)) part();
 ```
 
 Keep walls at 45 degrees or steeper and stand the part on its spigot or a flat
