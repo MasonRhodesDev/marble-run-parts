@@ -51,6 +51,10 @@ Update this table after every fit test. The library constants in
    least marble + 1.5 mm.
 5. Make the body height a whole number of units (`ms_units(n)`, 34.91 mm
    each) so a custom part sits level with official pieces in the same row.
+   Body means spigot shoulder to socket mouth; the male end hides inside the
+   socket below and adds nothing to the stack. Only parts with no male end
+   (top pieces, free-standing bases) have an unconstrained height. Socket
+   depth is inside the body and does not affect the pitch.
 
 ## Finding published parts
 
