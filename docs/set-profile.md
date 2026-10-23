@@ -53,7 +53,11 @@ Update this table after every fit test. The library constants in
    `ms_fit_coupon()`) before any part over an hour.
 4. 100% infill for load-bearing arms, 3 walls otherwise. Marble passages at
    least marble + 1.5 mm.
-5. Make the body height a whole number of units (`ms_units(n)`, 34.91 mm
+5. A male end extends at least 1 mm up into the body it belongs to
+   (`ms_male_overlap`, enforced by an `assert` in the library). The socket
+   floor sits on top of that overlap, so the joint is never a single wall of
+   layers.
+6. Make the body height a whole number of units (`ms_units(n)`, 34.91 mm
    each) so a custom part sits level with official pieces in the same row.
    Body means spigot shoulder to socket mouth; the male end hides inside the
    socket below and adds nothing to the stack. Only parts with no male end

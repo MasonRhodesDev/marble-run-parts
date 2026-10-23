@@ -37,6 +37,10 @@ ms_conn_len    = ms_female_depth; // kept for older parts
 ms_wall        = 2.2;     // socket and body wall, same as the set
 ms_male_overlap = 1.0;    // male end continues this far up into the body for strength
 ms_seat_h      = ms_wall + ms_male_overlap; // socket floor thickness above the male end
+// Constraint: a printed male end must run at least 1 mm up into the body it
+// belongs to, so the joint is more than one layer of seat ring. Parts that
+// draw their own junction must honour this too.
+assert(ms_male_overlap >= 1, "ms_male_overlap must be at least 1 mm");
 ms_bore        = 18.5;    // marble passage, same as the set's male end
 
 // Male end that plugs into a set female mouth or a printed ms_female_socket.
