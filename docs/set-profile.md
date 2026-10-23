@@ -27,7 +27,7 @@ Slicer profile in use applies +0.15 mm to holes and -0.05 mm to contours
 |---|---|---|---|
 | Diverter inlet, Printables 163082 | male per STL | | perfect |
 | Diverter outlets, Printables 163082 | female 23.75 | ~23.9 | barely too loose on the set's male |
-| Diverter paddle, same model | | | pending |
+| Diverter paddle, same model | | | loose by design, works |
 | Joyin bowl spigot, Printables 1700829, scaled 0.926 | male 23.6 round | ~23.5 | too small, do not reuse Joyin parts |
 | Fit coupon v1, this repo | female 23.35 / male 23.65 arcs, 22.90 flats | ~23.5 / ~23.55 | printing |
 

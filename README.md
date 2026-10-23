@@ -36,3 +36,9 @@ difference() {
 
 Keep walls at 45 degrees or steeper and stand the part on its spigot or a flat
 face, so nothing needs supports on a surface a marble touches.
+
+## License
+
+Designs, documentation and the OpenSCAD files (`lib/`, `parts/`, `docs/`) are
+licensed under CC BY-SA 4.0 (`LICENSE`). The helper scripts in `scripts/` are
+MIT (`LICENSE-MIT`).
