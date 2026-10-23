@@ -21,7 +21,8 @@ bore      = ms_bore;
 bowl_d         = 110;   // rim diameter (inside)
 wall           = 2.4;
 cone_deg       = 45;    // wall angle from horizontal; never below 45
-lip_h          = 12;    // vertical lip above the cone rim
+units          = 2;     // body height in set units, spigot shoulder to socket mouth
+lip_min        = 12;    // lip is sized to hit the unit height, never below this
 
 // inlet: vertical socket just inside the lip; marble drops down a shaft onto a
 // 45 deg ramp and leaves through a side window along the rim tangent.
@@ -35,6 +36,7 @@ sock_r     = female_id/2 + conn_wall;
 cone_r_out = bowl_d/2;
 cone_r_in  = bore/2 + 2;
 cone_h     = (cone_r_out - cone_r_in) * tan(cone_deg);
+lip_h      = max(lip_min, ms_units(units) - cone_h - inlet_h);
 spigot_h   = male_len;
 z_rim      = spigot_h + cone_h;          // top of cone, bottom of lip
 z_lip      = z_rim + lip_h;              // top of lip
