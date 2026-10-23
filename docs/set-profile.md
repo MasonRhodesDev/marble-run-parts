@@ -14,6 +14,10 @@ Marble Genius; published parts made for that name have fit so far.
 | Male end height | 6.4 mm | gripping part, fine chamfer at the tip |
 | Unit height (stacking pitch) | 34.91 mm | body of the base piece |
 | Base piece overall | 41.31 mm | body plus the 6.4 mm male end |
+| Wall | 2.2 mm | body, and the male end at its flats |
+| Male end bore | 18.5 mm | derived: 22.9 minus two walls; the set's marble passage |
+| Body outside | 27.6 mm | derived: 23.23 plus two walls |
+| Socket | full body depth | 23.23 bore down to a seat ring about one wall wide, just above the male end |
 | Marble | 16 mm assumed | confirm |
 
 The friction fit comes from the male arcs being 0.37 mm over the female bore

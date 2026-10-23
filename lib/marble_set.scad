@@ -11,7 +11,12 @@ MS_FEMALE_ID   = 23.23;   // female mouth, round bore
 MS_MALE_LEN    = 6.4;     // male end gripping height, with a fine chamfer at the tip
 MS_UNIT_H      = 34.91;   // stacking pitch: body height of the base piece
                           // (41.31 overall minus the 6.4 male end)
+MS_WALL        = 2.2;     // body wall, and the male end at its flats
+MS_MALE_BORE   = 18.5;    // MS_MALE_LO minus two walls: the set's marble passage
+MS_BODY_OD     = 27.63;   // MS_FEMALE_ID plus two walls
 MS_MARBLE_D    = 16;      // assumed, confirm
+// Official sockets: the 23.23 bore runs the whole body depth and ends in a
+// seat ring about one wall wide where the male end of the piece above lands.
 
 // Body height of a custom part should be n * MS_UNIT_H so stacks line up with
 // official pieces beside it.
@@ -29,8 +34,8 @@ ms_female_depth = 8;      // socket depth, seats a 6.4 male with room
 ms_mouth_chamfer = 0.6;   // lead-in at the socket mouth; also beats elephant
                           // foot when the mouth is printed against the plate
 ms_conn_len    = ms_female_depth; // kept for older parts
-ms_wall        = 2.4;     // socket wall
-ms_bore        = 17.5;    // marble passage, 1.5 mm over the marble
+ms_wall        = 2.2;     // socket and body wall, same as the set
+ms_bore        = 18.5;    // marble passage, same as the set's male end
 
 // Male end that plugs into a set female mouth or a printed ms_female_socket.
 // Round at ms_male_hi with ms_flats flats cut to ms_male_lo, like the set's.
