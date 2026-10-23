@@ -12,8 +12,8 @@ Marble Genius; published parts made for that name have fit so far.
 | Male end, across flats | 22.90 mm | six-ish flats, only the arcs touch |
 | Female mouth bore | 23.23 mm | round |
 | Male end height | 6.4 mm | gripping part, fine chamfer at the tip |
-| Unit height (stacking pitch) | 32.92 mm | body of the base piece |
-| Base piece overall | 41.31 mm | body plus male end; implies 8.39 mm protrusion, to reconcile with the 6.4 above |
+| Unit height (stacking pitch) | 34.91 mm | body of the base piece |
+| Base piece overall | 41.31 mm | body plus the 6.4 mm male end |
 | Marble | 16 mm assumed | confirm |
 
 The friction fit comes from the male arcs being 0.37 mm over the female bore
@@ -49,7 +49,7 @@ Update this table after every fit test. The library constants in
    `ms_fit_coupon()`) before any part over an hour.
 4. 100% infill for load-bearing arms, 3 walls otherwise. Marble passages at
    least marble + 1.5 mm.
-5. Make the body height a whole number of units (`ms_units(n)`, 32.92 mm
+5. Make the body height a whole number of units (`ms_units(n)`, 34.91 mm
    each) so a custom part sits level with official pieces in the same row.
 
 ## Finding published parts

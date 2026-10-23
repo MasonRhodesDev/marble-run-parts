@@ -9,9 +9,8 @@ MS_MALE_HI     = 23.60;   // male end, across the raised arcs
 MS_MALE_LO     = 22.90;   // male end, across the flats
 MS_FEMALE_ID   = 23.23;   // female mouth, round bore
 MS_MALE_LEN    = 6.4;     // male end gripping height, with a fine chamfer at the tip
-MS_UNIT_H      = 32.92;   // stacking pitch: body height of the base piece
-MS_MALE_PROTRUSION = 8.39; // base piece 41.31 overall minus 32.92 body; 2 mm more
-                          // than MS_MALE_LEN, presumably a shoulder. Reconcile.
+MS_UNIT_H      = 34.91;   // stacking pitch: body height of the base piece
+                          // (41.31 overall minus the 6.4 male end)
 MS_MARBLE_D    = 16;      // assumed, confirm
 
 // Body height of a custom part should be n * MS_UNIT_H so stacks line up with
