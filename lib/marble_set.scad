@@ -17,11 +17,11 @@
 MS_MALE_HI     = 23.60;   // male end, across the raised arcs
 MS_MALE_LO     = 22.90;   // male end, across the six flats (shallow tangent cuts, ~4.5 wide)
 MS_MALE_LEN    = 6.4;     // male end height; official edge chamfers are cosmetic (eyeballed)
-MS_FEMALE_ID   = 23.23;   // female mouth, round bore
+MS_FEMALE_ID   = 23.50;   // female bore, round, constant from the mouth to the male step
 MS_UNIT_H      = 34.91;   // stacking pitch: body height (41.31 overall minus the male end)
 MS_WALL        = 2.2;     // body wall, and the male end at its flats
 MS_MALE_BORE   = MS_MALE_LO - 2 * MS_WALL;   // 18.5: the set's marble passage
-MS_BODY_OD     = MS_FEMALE_ID + 2 * MS_WALL; // 27.63 if the walls are concentric
+MS_BODY_OD     = MS_FEMALE_ID + 2 * MS_WALL; // 27.9 if the walls are concentric
 MS_MARBLE_D    = 16;      // assumed; measure the largest of ten
 MS_SOCKET_KEEPOUT = MS_MALE_LEN + 1;         // 7.4: plain bore below a mouth before any feature
 

@@ -32,9 +32,8 @@ keep the vortex consuming the library as is.
 
 ## Open questions for the spec thread
 
-- Official female bore read 23.23 at the mouth and 23.5 deeper in. If that is
-  a gripping band with relief, sockets should copy it. Until answered, the
-  socket stays plain 23.35.
+- Resolved: the official female bore is 23.5 straight through. Socket CAD
+  stays 23.35 (verified fit).
 - Marble diameter is assumed 16. Passage is 18.5 like the set.
 
 ## Build, check, slice, print

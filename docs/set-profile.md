@@ -19,20 +19,19 @@ orientation prints best and the part file says which.
 |---|---|---|
 | Male end, across arcs | 23.60 mm | round with alternating flats |
 | Male end, across flats | 22.90 mm | six shallow tangent flats about 4.5 mm wide; only the arcs touch |
-| Female mouth bore | 23.23 mm | round, at the mouth |
-| Female body bore | 23.5 mm | measured deeper in; to confirm whether the mouth is a gripping band with relief behind it |
+| Female bore | 23.50 mm | round, constant from the lip to the step at the male insert (an earlier 23.23 reading was wrong) |
 | Edge chamfers | cosmetic | official tip and mouth edges are barely broken; ours are print lead-ins |
 | Male end height | 6.4 mm | gripping part, fine chamfer at the tip |
 | Unit height (stacking pitch) | 34.91 mm | body of the base piece |
 | Base piece overall | 41.31 mm | body plus the 6.4 mm male end |
 | Wall | 2.2 mm | body, and the male end at its flats |
 | Male end bore | 18.5 mm | derived: 22.9 minus two walls; the set's marble passage |
-| Body outside | 27.6 mm | derived: 23.23 plus two walls |
+| Body outside | 27.9 mm | derived: 23.5 plus two walls |
 | Socket | full body depth | 23.23 bore down to a seat ring about one wall wide, just above the male end |
 | Marble | 16 mm assumed | confirm |
 
-The friction fit comes from the male arcs being 0.37 mm over the female bore
-while the flats clear it. Copy that scheme on printed male ends rather than a
+The friction fit comes from the male arcs being 0.1 mm over the female bore
+while the flats clear it by 0.6. Copy that scheme on printed male ends rather than a
 plain cylinder, so the press is light and self-centring.
 
 ## Fit log for printed parts
@@ -41,7 +40,10 @@ Slicer profile in use (OrcaSlicer, 0.4 mm nozzle, PLA, direct drive, 210 C,
 1.5 mm retraction at 45 mm/s) applies xy_hole_compensation 0.15 and
 xy_contour_compensation -0.05. Both are per side, so a bore prints about
 0.30 wider than drawn and a spigot about 0.10 narrower. The printed sizes in
-the table are estimates on that basis; measure the coupon to settle it.
+the table are estimates on that basis, and the coupon result supports it: a
+spigot drawn 23.65 printing near 23.55 is a 0.05 press in the 23.5 bore, and
+a socket drawn 23.35 printing near 23.65 sits on the 23.6 arcs, which is the
+"perfect" fit reported.
 
 | Part | CAD | Printed (est.) | Result |
 |---|---|---|---|
