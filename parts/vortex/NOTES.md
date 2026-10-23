@@ -55,6 +55,7 @@ standing on the outlet socket, mouth on the plate, so keep the brim and the
 |---|---|---|---|
 | v1 | not printed | | scaled Joyin bowl instead, wrong connector, abandoned |
 | v2 | 2026-10-23 | 4h16m | fits perfect both ends; inverted; no ramp; window holes the bowl |
+| v3 | 2026-10-23, started 15:35 | est 4h27m | connectors flipped, 45 degree ramp, window clear of the bowl; sliced at 200 C, 2 mm retraction, slope z hop, 200 mm/s travel for stringing; watch the first marble for rubbing on the bowl wall inside the shaft |
 | v3 | sliced, uploaded as marble_vortex_v3.gcode | est 4h30m, 43.6 g, 76.4 mm, 0% support | flipped connectors, 45 degree ramp, sill z 46.41 (2 mm above bowl at the exit), bowl wall intact |
 
 v3 notes: a sectioned check (x = tower axis and off axis) shows the ramp falling 45 degrees to the sill at +y and a continuous bowl wall under the window. Beyond the two fixes: `window_h` (26) now exceeds the tower above the sill, so the +y tower wall is open to the spigot (no window roof bridge). The shaft is clipped by the bowl shell, so on the outer side of the shaft the wall rises into the bore sides; unprinted, so check marble travel on the print.
