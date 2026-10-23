@@ -14,6 +14,12 @@ models that fit them.
 
 ## Quick start
 
+BOSL2 is vendored as a git submodule, so clone with `--recurse-submodules`
+or run `git submodule update --init` after cloning. Parts include it as
+`include <../../lib/BOSL2/std.scad>`. OpenSCAD 2025 or a recent nightly with
+the Manifold backend is strongly recommended; 2021.01 works but previews and
+renders are slow.
+
 ```sh
 scripts/build.sh                  # out/vortex.stl, out/fit_coupon.stl
 scripts/preview.sh parts/vortex/vortex.scad vortex.png iso
