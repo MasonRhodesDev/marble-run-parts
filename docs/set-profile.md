@@ -21,7 +21,9 @@ plain cylinder, so the press is light and self-centring.
 ## Fit log for printed parts
 
 Slicer profile in use applies +0.15 mm to holes and -0.05 mm to contours
-(OrcaSlicer, 0.4 mm nozzle, PLA). All CAD numbers below are pre-compensation.
+(OrcaSlicer, 0.4 mm nozzle, PLA, direct drive extruder, 210 C, 1.5 mm
+retraction at 45 mm/s after fine stringing at 220 C with 1 mm). All CAD
+numbers below are pre-compensation.
 
 | Part | CAD | Printed (est.) | Result |
 |---|---|---|---|
