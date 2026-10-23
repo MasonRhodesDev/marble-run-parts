@@ -8,6 +8,9 @@ include <../../lib/marble_set.scad>;
 units = 1;              // body height in set units
 $fn = 96;
 
+$ms_features = ["socket", "spigot", "stacks", "marble"];
+$ms_units    = units;
+
 body_h  = ms_units(units);
 body_od = ms_female_id + 2 * ms_wall;   // 27.63 like the set
 seat_h  = ms_seat_h;                     // socket floor: one wall plus the male overlap
@@ -27,4 +30,5 @@ module tube() {
     }
 }
 
+ms_check(body_h = body_h, socket_depth = body_h - seat_h, passage = ms_bore);
 tube();

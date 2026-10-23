@@ -32,6 +32,9 @@ window_h       = 26;
 
 $fn = 96;
 
+$ms_features = ["socket", "spigot", "stacks", "marble"];
+$ms_units    = units;
+
 sock_r     = female_id/2 + conn_wall;
 cone_r_out = bowl_d/2;
 cone_r_in  = bore/2 + 2;
@@ -106,4 +109,8 @@ module vortex() {
 
 module coupon() { ms_fit_coupon(); }
 
-if (part == "coupon") coupon(); else vortex();
+if (part == "coupon") coupon();
+else {
+    ms_check(body_h = z_lip + inlet_h - spigot_h, socket_depth = conn_len, passage = bore);
+    vortex();
+}

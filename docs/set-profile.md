@@ -64,6 +64,25 @@ Update this table after every fit test. The library constants in
    (top pieces, free-standing bases) have an unconstrained height. Socket
    depth is inside the body and does not affect the pitch.
 
+## Declaring features and checking constraints
+
+Every part declares what it has and asks the library to check the rules that
+apply, before drawing anything:
+
+```openscad
+$ms_features = ["socket", "spigot", "stacks", "marble"];
+$ms_units    = 2;
+ms_check(body_h = ..., socket_depth = ..., passage = ms_bore);
+```
+
+Rules fire only for declared features: `spigot` (1 mm overlap into the body,
+flats below arcs, 2.2 mm wall at the flats), `socket` (depth covers the male
+end plus lead-in, mouth chamfer at least 0.5), `stacks` (body is a whole
+number of units and matches `$ms_units`), `marble` (passage at least marble
+plus 1.5; on by default, declare `no-marble` to skip). A failed rule aborts
+the build with the offending number and the nearest valid one, so
+`scripts/build.sh` cannot produce a non-conforming STL.
+
 ## Finding published parts
 
 - Search "Marble Genius" on Printables and Thingiverse. Confirmed series by

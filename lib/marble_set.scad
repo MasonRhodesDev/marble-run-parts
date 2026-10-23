@@ -86,3 +86,60 @@ module ms_fit_coupon() {
         ms_male_spigot();
     }
 }
+
+// ---------------------------------------------------------------------------
+// Feature declaration and conditional constraints
+//
+// A part declares what it has, then calls ms_check() with its key dimensions.
+// Rules only fire for the features declared. Declarations are dynamic-scope
+// variables so every library module beneath the part can see them too.
+//
+//   $ms_features = ["socket", "spigot", "stacks"];
+//   $ms_units    = 2;
+//   ms_check(body_h = 69.82, socket_depth = 8, passage = ms_bore);
+//
+// Features:
+//   "spigot"  has a male end          -> overlap >= 1, flats below arcs, wall >= 2.2
+//   "socket"  has a female socket     -> depth >= male end + lead-in, mouth chamfer >= 0.5
+//   "stacks"  sits in a stack         -> body_h is a whole number of units
+//   "marble"  a marble passes through -> passage >= marble + 1.5 (default on)
+// ---------------------------------------------------------------------------
+
+function ms_has(f) = !is_undef($ms_features) && len([for (x = $ms_features) if (x == f) x]) > 0;
+function ms_near(a, b, tol = 0.05) = abs(a - b) <= tol;
+function ms_is_units(h) = ms_near(h / MS_UNIT_H, round(h / MS_UNIT_H), 0.002);
+
+module ms_check(body_h = undef, socket_depth = undef, passage = ms_bore, marble = MS_MARBLE_D) {
+    assert(!is_undef($ms_features), "declare $ms_features before ms_check()");
+
+    // spigot rules
+    if (ms_has("spigot")) {
+        assert(ms_male_overlap >= 1, "spigot: ms_male_overlap must be at least 1 mm");
+        assert(ms_male_lo < ms_male_hi, "spigot: flats must sit below the arcs");
+        assert((ms_male_lo - passage) / 2 >= MS_WALL - 0.05,
+               str("spigot: wall at the flats is ", (ms_male_lo - passage) / 2, " mm, need ", MS_WALL));
+    }
+
+    // socket rules
+    if (ms_has("socket")) {
+        assert(!is_undef(socket_depth), "socket: pass socket_depth to ms_check()");
+        assert(socket_depth >= MS_MALE_LEN + ms_mouth_chamfer,
+               str("socket: depth ", socket_depth, " is shallower than the male end plus lead-in ", MS_MALE_LEN + ms_mouth_chamfer));
+        assert(ms_mouth_chamfer >= 0.5, "socket: mouth chamfer under 0.5 mm will bind on elephant foot");
+    }
+
+    // stacking rule
+    if (ms_has("stacks")) {
+        assert(!is_undef(body_h), "stacks: pass body_h to ms_check()");
+        assert(ms_is_units(body_h),
+               str("stacks: body ", body_h, " is not a whole number of units (", MS_UNIT_H, "); nearest ", round(body_h / MS_UNIT_H) * MS_UNIT_H));
+        if (!is_undef($ms_units))
+            assert(ms_near(body_h, ms_units($ms_units), 0.05),
+                   str("stacks: body ", body_h, " does not match the declared ", $ms_units, " units"));
+    }
+
+    // marble passage, on unless the part says otherwise
+    if (ms_has("marble") || is_undef($ms_features) || !ms_has("no-marble"))
+        assert(passage >= marble + 1.5,
+               str("marble: passage ", passage, " must be at least marble + 1.5 = ", marble + 1.5));
+}
