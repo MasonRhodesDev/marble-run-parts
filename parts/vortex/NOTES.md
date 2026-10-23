@@ -69,3 +69,4 @@ Preview speed: `$fn` is 32 in preview and 96 in render; the bowl body is wrapped
 
 v5 design: units = 3 (shoulder 104.73). Tube OD 27.9 at 67.2 mm from the bowl axis. The block is clipped below by a 45 degree cone corbel through the lip foot, so nothing reaches the socket. Marble path bend radius 20, trough descent 20 degrees, entry 25 degrees off the tangent, floor flush with the lip inner face 4 mm above the cone rim. The channel is an open-top gutter of sphere hulls; the cone wall is protected from the cut. Checks: overhang none beyond 45 degrees, 0 open edges, marble clearance probes clear along the whole path.
 
+v5 print started 2026-10-23 16:30 as marble_vortex_v5.gcode: est 5h00m, 47 g, 111 mm, 0% support, 200 C, 2 mm retraction, slope z hop. Owner approved from renders on the phone.
