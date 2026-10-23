@@ -41,8 +41,14 @@ r_axis     = cone_r_out - tower_r + 0.6;     // tower wall merges into the lip
 z_shoulder = ms_units(units);                // male shoulder: stack height from the mouth
 z_tip      = z_shoulder + ms_male_len;
 z_cone_at_axis = z0 + (r_axis - cone_r_in) * tan(cone_deg);
-z_win      = z_cone_at_axis + 2.5;           // window sill, just above the bowl surface
+// Marble path leaves the tower along +y at x = axis, at the tower wall. The sill is set
+// from the bowl surface at that far point so the marble drops win_drop onto the bowl.
+win_drop   = 2;                              // drop from the sill to the bowl surface at the far edge
+r_far      = sqrt(r_axis * r_axis + tower_r * tower_r);
+z_cone_far = z0 + (r_far - cone_r_in) * tan(cone_deg);
+z_win      = z_cone_far + win_drop;          // window sill
 
+echo(r_axis = r_axis, z_win = z_win, z_cone_far = z_cone_far, drop = z_win - z_cone_far);
 assert(z_shoulder >= z_lip + 2, str("tower shoulder ", z_shoulder, " must clear the lip top ", z_lip));
 ms_check_units(z_shoulder, units);
 
@@ -72,17 +78,29 @@ module tower_body() {
     }
 }
 
+// the bowl wall itself; cuts must never remove it
+module bowl_shell() { difference() { bowl_outer(); bowl_inside(); } }
+
+// everything above a plane that rises toward -y at ramp_deg and meets z_win at y = +bore/2
+module above_ramp() {
+    translate([0, ms_bore / 2, z_win]) rotate([-ramp_deg, 0, 0])
+        translate([-30, -60, 0]) cube([60, 120, 120]);
+}
+
 module tower_cuts() {
     translate([r_axis, 0, 0]) {
-        // drop shaft with a sloped floor: high on -y, low at the window (+y)
-        hull() {
-            translate([0, -ms_bore / 2, z_win + ms_bore * tan(ramp_deg)]) cylinder(h = 0.1, d = 0.1);
-            translate([0,  ms_bore / 2, z_win]) cylinder(h = 0.1, d = 0.1);
-            translate([0, 0, z_tip]) cylinder(h = 0.1, d = ms_bore);
-            translate([0, 0, z_win + 0.05]) cylinder(h = 0.05, d = ms_bore);
+        // drop shaft: round bore above a real ramp, low edge at the sill on the +y side
+        intersection() {
+            translate([0, 0, z_win]) cylinder(h = z_tip - z_win, d = ms_bore);
+            above_ramp();
         }
-        // tangential window through the tower wall toward +y
-        translate([-ms_bore / 2, 0, z_win]) cube([ms_bore, tower_r + 1, window_h]);
+        // tangential window through the tower wall toward +y, clipped to the tower
+        // cylinder and to above the ramp so it never eats the ramp
+        intersection() {
+            translate([-ms_bore / 2, 0, z_win]) cube([ms_bore, tower_r + 1, window_h]);
+            translate([0, 0, z_win - 1]) cylinder(h = window_h + 2, r = tower_r + 0.01);
+            above_ramp();
+        }
     }
 }
 
@@ -97,7 +115,7 @@ module part() {
         // outlet socket: mouth at z = 0 facing down, plain bore up to the floor
         translate([0, 0, sock_depth]) mirror([0, 0, 1]) ms_female_bore(sock_depth, chamfer = 0.8);
         ms_passage(z0 + 1);
-        tower_cuts();
+        difference() { tower_cuts(); bowl_shell(); }
     }
 }
 

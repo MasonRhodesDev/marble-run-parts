@@ -13,16 +13,16 @@ keep the vortex consuming the library as is.
   outlet). v3 in `vortex.scad` already flips them: male inlet on top of the
   rim tower, female outlet at the bottom. Not yet printed.
 
-## Known defects in the inlet tower (fix before printing v3)
+## Inlet tower defects (both FIXED in v3, 2026-10-23)
 
-1. **No ramp at the bottom of the shaft.** `tower_cuts()` builds the shaft
+1. FIXED: the shaft is now a round bore cut above a real 45 degree plane that meets the sill at the +y edge, no flat floor. Original note: **No ramp at the bottom of the shaft.** `tower_cuts()` builds the shaft
    as a hull that includes a flat disc at `z_win`, so the floor is level and
    the marble does not leave through the window. Fix: hull the top disc with
    a disc tilted by `ramp_deg` whose low edge sits at the window sill, and
    drop the flat bottom disc. Verify with
    `scripts/preview.sh out/vortex.stl x.png section-x=<r_axis>` and confirm
    the floor slopes down toward +y.
-2. **Window cuts through the bowl wall.** The sill `z_win` is the bowl height
+2. FIXED: sill is set from the bowl height at the tower exit point (x = tower axis, y = tower radius), 2 mm above it; all tower cuts have the bowl shell subtracted so the wall is never cut, and the window is clipped to the tower cylinder and to above the ramp. Original note: **Window cuts through the bowl wall.** The sill `z_win` is the bowl height
    at the tower axis plus 2.5, but the bowl rises toward the lip, so on the
    +y side of the tower the cube drops below the bowl surface and holes the
    cone. Fix: clip the window to the tower cylinder and subtract the bowl
@@ -55,3 +55,6 @@ standing on the outlet socket, mouth on the plate, so keep the brim and the
 |---|---|---|---|
 | v1 | not printed | | scaled Joyin bowl instead, wrong connector, abandoned |
 | v2 | 2026-10-23 | 4h16m | fits perfect both ends; inverted; no ramp; window holes the bowl |
+| v3 | sliced, uploaded as marble_vortex_v3.gcode | est 4h30m, 43.6 g, 76.4 mm, 0% support | flipped connectors, 45 degree ramp, sill z 46.41 (2 mm above bowl at the exit), bowl wall intact |
+
+v3 notes: a sectioned check (x = tower axis and off axis) shows the ramp falling 45 degrees to the sill at +y and a continuous bowl wall under the window. Beyond the two fixes: `window_h` (26) now exceeds the tower above the sill, so the +y tower wall is open to the spigot (no window roof bridge). The shaft is clipped by the bowl shell, so on the outer side of the shaft the wall rises into the bore sides; unprinted, so check marble travel on the print.
