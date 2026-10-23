@@ -1,0 +1,8 @@
+# generated
+*.stl
+*.3mf
+*.gcode
+out/
+out-*/
+*.png
+!docs/*.png
