@@ -35,6 +35,8 @@ ms_mouth_chamfer = 0.6;   // lead-in at the socket mouth; also beats elephant
                           // foot when the mouth is printed against the plate
 ms_conn_len    = ms_female_depth; // kept for older parts
 ms_wall        = 2.2;     // socket and body wall, same as the set
+ms_male_overlap = 1.0;    // male end continues this far up into the body for strength
+ms_seat_h      = ms_wall + ms_male_overlap; // socket floor thickness above the male end
 ms_bore        = 18.5;    // marble passage, same as the set's male end
 
 // Male end that plugs into a set female mouth or a printed ms_female_socket.

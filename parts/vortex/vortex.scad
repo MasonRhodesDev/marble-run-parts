@@ -43,7 +43,7 @@ z_lip      = z_rim + lip_h;              // top of lip
 r_axis     = cone_r_out - sock_r + 0.6;  // socket wall merges into the lip
 z_cone_at_axis = spigot_h + (r_axis - cone_r_in) * tan(cone_deg);
 
-module male_spigot(h) { mirror([0,0,1]) translate([0,0,-h]) ms_male_spigot(h = h, bore = 0.01); }
+module male_spigot(h) { mirror([0,0,1]) translate([0,0,-(h + ms_male_overlap)]) ms_male_spigot(h = h + ms_male_overlap, bore = 0.01); }
 
 module bowl_outer() {
     union() {
