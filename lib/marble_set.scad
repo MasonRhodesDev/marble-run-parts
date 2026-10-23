@@ -1,153 +1,149 @@
 // Connector library for the household tube marble run set (Marble Genius style).
-// Include from any custom part:  include <marble_set.scad>;
-// Dimensions are nominal CAD values tuned for a slicer profile that applies
-// +0.15 mm to holes and -0.05 mm to contours. See SET_PROFILE.md for the
-// measurements behind them and the fit log.
+// Include from any part:  include <../../lib/marble_set.scad>;
+//
+// Orientation, as marbles see it: the MALE end is the TOP of a piece and the
+// FEMALE socket is the BOTTOM. A marble enters through the male end and leaves
+// through the socket into the male end of the piece below. Parts are drawn in
+// whatever orientation prints best; say which in the part file.
+//
+// Dimensions are nominal CAD values for a slicer profile that applies
+// +0.15 mm per side to holes and -0.05 mm per side to outer contours (so a
+// bore prints about 0.30 wider and a spigot about 0.10 narrower than drawn;
+// confirm with calipers on a coupon). See docs/set-profile.md.
 
-// Measured on the set, 2026-10-23, calipers
+// ---------------------------------------------------------------------------
+// Measured on the set, calipers, 2026-10-23
+// ---------------------------------------------------------------------------
 MS_MALE_HI     = 23.60;   // male end, across the raised arcs
-MS_MALE_LO     = 22.90;   // male end, across the flats
+MS_MALE_LO     = 22.90;   // male end, across the six flats (shallow tangent cuts, ~4.5 wide)
+MS_MALE_LEN    = 6.4;     // male end height; official edge chamfers are cosmetic (eyeballed)
 MS_FEMALE_ID   = 23.23;   // female mouth, round bore
-MS_MALE_LEN    = 6.4;     // male end gripping height, with a fine chamfer at the tip
-MS_UNIT_H      = 34.91;   // stacking pitch: body height of the base piece
-                          // (41.31 overall minus the 6.4 male end)
+MS_UNIT_H      = 34.91;   // stacking pitch: body height (41.31 overall minus the male end)
 MS_WALL        = 2.2;     // body wall, and the male end at its flats
-MS_MALE_BORE   = 18.5;    // MS_MALE_LO minus two walls: the set's marble passage
-MS_BODY_OD     = 27.63;   // MS_FEMALE_ID plus two walls
-MS_MARBLE_D    = 16;      // assumed, confirm
-MS_SOCKET_KEEPOUT = MS_MALE_LEN + 1; // from the socket mouth, nothing but plain
-                          // bore for this depth: the male end plus 1 mm clearance
-// Official sockets: the 23.23 bore runs the whole body depth and ends in a
-// seat ring about one wall wide where the male end of the piece above lands.
+MS_MALE_BORE   = MS_MALE_LO - 2 * MS_WALL;   // 18.5: the set's marble passage
+MS_BODY_OD     = MS_FEMALE_ID + 2 * MS_WALL; // 27.63 if the walls are concentric
+MS_MARBLE_D    = 16;      // assumed; measure the largest of ten
+MS_SOCKET_KEEPOUT = MS_MALE_LEN + 1;         // 7.4: plain bore below a mouth before any feature
 
-// Body height of a custom part should be n * MS_UNIT_H so stacks line up with
-// official pieces beside it.
+// ---------------------------------------------------------------------------
+// CAD targets for printed parts
+// Fit status: coupon v1 (2026-10-23) at these diameters: socket seated an
+// official male end perfectly at the top end; spigot fitted an official
+// socket very well. Lengths were then cut to the set's.
+// ---------------------------------------------------------------------------
+ms_female_id     = 23.35;   // socket bore
+ms_male_hi       = 23.65;   // spigot arcs
+ms_male_lo       = 22.90;   // spigot flats
+ms_flats         = 6;
+ms_male_len      = 6.5;     // spigot height
+ms_male_chamfer  = 0.5;     // spigot tip chamfer
+ms_male_overlap  = 1.0;     // spigot continues this far into its body (constraint: >= 1)
+ms_mouth_chamfer = 0.6;     // socket lead-in; use 0.8 when the mouth prints on the plate
+ms_max_lead_in   = 1.0;     // no lead-in may be deeper than this (keep-out probe starts here)
+ms_wall          = 2.2;
+ms_bore          = 18.5;    // marble passage, same as the set
+ms_seat_h        = ms_wall + ms_male_overlap; // floor under a socket that ends inside a part
+ms_marble_clear  = 1.5;     // passage must exceed the marble by this
+
 function ms_units(n) = n * MS_UNIT_H;
 
-// CAD targets for printed parts (status: coupon v1 2026-10-23 passed both
-// fits at these diameters; lengths shortened to the set's after it)
-ms_female_id   = 23.35;   // socket bore; prints ~23.5, 0.1 press on the arcs. Verified.
-ms_male_hi     = 23.65;   // spigot arcs; prints ~23.55 into the 23.23 bore. Verified.
-ms_male_lo     = 22.90;   // spigot flats
-ms_flats       = 6;
-ms_male_len    = 6.5;     // spigot height, matches the set's 6.4
-ms_male_chamfer = 0.5;    // tip chamfer, the set's is similar
-ms_female_depth = 8;      // socket depth, seats a 6.4 male with room
-ms_mouth_chamfer = 0.6;   // lead-in at the socket mouth; also beats elephant
-                          // foot when the mouth is printed against the plate
-ms_conn_len    = ms_female_depth; // kept for older parts
-ms_wall        = 2.2;     // socket and body wall, same as the set
-ms_male_overlap = 1.0;    // male end continues this far up into the body for strength
-ms_seat_h      = ms_wall + ms_male_overlap; // socket floor thickness above the male end
-// Constraint: a printed male end must run at least 1 mm up into the body it
-// belongs to, so the joint is more than one layer of seat ring. Parts that
-// draw their own junction must honour this too.
+// ---------------------------------------------------------------------------
+// Constant relations, checked once at include time. A part cannot break
+// these; they guard edits to the numbers above.
+// ---------------------------------------------------------------------------
 assert(ms_male_overlap >= 1, "ms_male_overlap must be at least 1 mm");
-ms_bore        = 18.5;    // marble passage, same as the set's male end
+assert(ms_male_lo < MS_FEMALE_ID && MS_FEMALE_ID < ms_male_hi,
+       "spigot: flats must clear the official bore and arcs must press on it");
+assert(ms_female_id < MS_MALE_HI, "socket: bore must press on the official arcs");
+assert(ms_bore >= MS_MARBLE_D + ms_marble_clear, "ms_bore is too small for the marble");
+assert((ms_male_lo - ms_bore) / 2 >= MS_WALL - 0.05, "ms_bore leaves the spigot wall under 2.2");
+if (ms_mouth_chamfer < 0.5) echo("WARNING: ms_mouth_chamfer under 0.5 binds on elephant foot");
 
-// Male end that plugs into a set female mouth or a printed ms_female_socket.
-// Round at ms_male_hi with ms_flats flats cut to ms_male_lo, like the set's.
-// Tip is at z = h (plug it in upward); the chamfer is on that end.
-module ms_male_spigot(h = ms_male_len, bore = ms_bore, chamfer = ms_male_chamfer) {
+// ---------------------------------------------------------------------------
+// Drawing modules. The checks live here, on the numbers actually drawn.
+// ---------------------------------------------------------------------------
+
+// Male end. Base at z = 0, tip (chamfered) at z = h. Place it so that the
+// extra `overlap` length lies inside the body it belongs to.
+// bore = undef draws it solid (when the part cuts its own passage).
+module ms_male_spigot(h = ms_male_len, bore = ms_bore, chamfer = ms_male_chamfer, overlap = ms_male_overlap) {
+    assert(h >= MS_MALE_LEN, str("spigot: height ", h, " is under the official ", MS_MALE_LEN));
+    assert(overlap >= 1, "spigot: overlap into the body must be at least 1 mm");
+    assert(is_undef(bore) || (ms_male_lo - bore) / 2 >= MS_WALL - 0.05,
+           str("spigot: bore ", bore, " leaves a wall under ", MS_WALL, " at the flats"));
+    assert(is_undef(bore) || bore >= MS_MARBLE_D + ms_marble_clear,
+           str("spigot: bore ", bore, " is under marble + ", ms_marble_clear));
+    total = h + overlap;
     difference() {
-        union() {
-            cylinder(h = h - chamfer, d = ms_male_hi);
-            translate([0, 0, h - chamfer]) cylinder(h = chamfer, d1 = ms_male_hi, d2 = ms_male_hi - 2*chamfer);
+        translate([0, 0, -overlap]) union() {
+            cylinder(h = total - chamfer, d = ms_male_hi);
+            translate([0, 0, total - chamfer])
+                cylinder(h = chamfer, d1 = ms_male_hi, d2 = ms_male_hi - 2 * chamfer);
         }
-        for (i = [0:ms_flats-1])
+        for (i = [0:ms_flats - 1])
             rotate([0, 0, i * 360 / ms_flats])
-                translate([ms_male_lo/2, -20, -1]) cube([10, 40, h + 2]);
-        translate([0, 0, -1]) cylinder(h = h + 2, d = bore);
+                translate([ms_male_lo / 2, -20, -overlap - 1]) cube([10, 40, total + 2]);
+        if (!is_undef(bore)) translate([0, 0, -overlap - 1]) cylinder(h = total + 2, d = bore);
     }
 }
 
-// Female socket that accepts a set male end. Solid ring; subtract your own
-// passage below the seat.
-// Mouth is at z = h. Chamfer the mouth; if the mouth will print against the
-// plate, mirror it or raise ms_mouth_chamfer to 0.8.
-module ms_female_socket(h = ms_female_depth, wall = ms_wall) {
+// Negative: socket bore of depth h with the mouth at z = h (facing +z).
+// feature_depth is the distance from the mouth to the first thing that is not
+// plain bore (a floor, a window, a narrowing). The keep-out rule is asserted
+// on it here and verified geometrically by scripts/check_keepout.sh.
+module ms_female_bore(h, feature_depth = undef, chamfer = ms_mouth_chamfer) {
+    fd = is_undef(feature_depth) ? h : feature_depth;
+    assert(chamfer <= ms_max_lead_in, str("socket: lead-in ", chamfer, " exceeds ", ms_max_lead_in));
+    assert(h >= MS_SOCKET_KEEPOUT, str("socket: depth ", h, " is under the keep-out ", MS_SOCKET_KEEPOUT));
+    assert(fd >= MS_SOCKET_KEEPOUT, str("socket: first feature at ", fd, " below the mouth; keep-out is ", MS_SOCKET_KEEPOUT));
+    assert(fd <= h + 0.01, "socket: feature_depth cannot exceed the socket depth");
+    translate([0, 0, -0.01]) cylinder(h = h + 0.02, d = ms_female_id);
+    translate([0, 0, h - chamfer]) cylinder(h = chamfer + 0.01, d1 = ms_female_id, d2 = ms_female_id + 2 * chamfer);
+}
+
+// Positive: a socket ring of depth h, mouth at z = h, with a floor of
+// ms_seat_h under it and a marble passage through the floor.
+module ms_female_socket(h = MS_SOCKET_KEEPOUT + 1, wall = ms_wall, floor_h = ms_seat_h, passage = ms_bore) {
     difference() {
-        cylinder(h = h, r = ms_female_id/2 + wall);
-        ms_female_bore(h);
+        cylinder(h = h + floor_h, r = ms_female_id / 2 + wall);
+        translate([0, 0, floor_h]) ms_female_bore(h);
+        ms_passage(floor_h + 1);
     }
 }
 
-// Negative shapes, for subtracting from a larger body
-module ms_female_bore(h = ms_female_depth, chamfer = ms_mouth_chamfer) {
-    translate([0,0,-0.01]) cylinder(h = h + 0.02, d = ms_female_id);
-    translate([0,0,h - chamfer]) cylinder(h = chamfer + 0.01, d1 = ms_female_id, d2 = ms_female_id + 2*chamfer);
+// Negative: marble passage
+module ms_passage(h, d = ms_bore) {
+    assert(d >= MS_MARBLE_D + ms_marble_clear, str("passage ", d, " is under marble + ", ms_marble_clear));
+    translate([0, 0, -0.01]) cylinder(h = h + 0.02, d = d);
 }
-module ms_passage(h)                  { translate([0,0,-0.01]) cylinder(h = h + 0.02, d = ms_bore); }
 
-// Fit coupon: one socket ring (mouth up, on a 2 mm base so the plate end is
-// not the mating end) and one flanged spigot, 40 mm apart.
+// Stacking check for a part that sits in a row with official pieces.
+// body_h is spigot shoulder to socket mouth. One tolerance: 0.1 mm.
+module ms_check_units(body_h, units) {
+    assert(abs(body_h - ms_units(units)) <= 0.1,
+           str("stacks: body ", body_h, " is not ", units, " units (", ms_units(units), ")"));
+}
+
+// Fit coupon: socket ring on a 2 mm base (mouth up, so the plate end is not
+// the mating end) and a flanged spigot, 40 mm apart.
 module ms_fit_coupon() {
-    difference() { cylinder(h = ms_female_depth + 2, r = ms_female_id/2 + ms_wall); translate([0,0,2]) ms_female_bore(ms_female_depth); ms_passage(3); }
+    ms_female_socket(h = ms_male_len + 1.5, floor_h = 2);
     translate([40, 0, 0]) {
         difference() { cylinder(h = 2, d = ms_male_hi + 6); ms_passage(2); }
-        ms_male_spigot();
+        translate([0, 0, ms_male_overlap]) ms_male_spigot();
     }
 }
 
 // ---------------------------------------------------------------------------
-// Feature declaration and conditional constraints
-//
-// A part declares what it has, then calls ms_check() with its key dimensions.
-// Rules only fire for the features declared. Declarations are dynamic-scope
-// variables so every library module beneath the part can see them too.
-//
-//   $ms_features = ["socket", "spigot", "stacks"];
-//   $ms_units    = 2;
-//   ms_check(body_h = 69.82, socket_depth = 8, passage = ms_bore);
-//
-// Features:
-//   "spigot"  has a male end          -> overlap >= 1, flats below arcs, wall >= 2.2
-//   "socket"  has a female socket     -> plain bore for MS_SOCKET_KEEPOUT below the
-//                                        mouth before any other feature (seat, window,
-//                                        opening); pass feature_depth = distance from
-//                                        the mouth to the nearest such feature
-//   "stacks"  sits in a stack         -> body_h is a whole number of units
-//   "marble"  a marble passes through -> passage >= marble + 1.5 (default on)
+// Geometric keep-out declaration. A part lists its socket mouths as
+//   ms_sockets = [[x, y, z_mouth, dir], ...]   dir = +1 mouth faces +z, -1 faces -z
+// scripts/check_keepout.sh renders two tests per socket against the part:
+// nothing inside the bore, and the full wall present, for MS_SOCKET_KEEPOUT.
 // ---------------------------------------------------------------------------
-
-function ms_has(f) = !is_undef($ms_features) && len([for (x = $ms_features) if (x == f) x]) > 0;
-function ms_near(a, b, tol = 0.05) = abs(a - b) <= tol;
-function ms_is_units(h) = ms_near(h / MS_UNIT_H, round(h / MS_UNIT_H), 0.002);
-
-module ms_check(body_h = undef, socket_depth = undef, feature_depth = undef, passage = ms_bore, marble = MS_MARBLE_D) {
-    assert(!is_undef($ms_features), "declare $ms_features before ms_check()");
-
-    // spigot rules
-    if (ms_has("spigot")) {
-        assert(ms_male_overlap >= 1, "spigot: ms_male_overlap must be at least 1 mm");
-        assert(ms_male_lo < ms_male_hi, "spigot: flats must sit below the arcs");
-        assert((ms_male_lo - passage) / 2 >= MS_WALL - 0.05,
-               str("spigot: wall at the flats is ", (ms_male_lo - passage) / 2, " mm, need ", MS_WALL));
-    }
-
-    // socket rules
-    if (ms_has("socket")) {
-        assert(!is_undef(socket_depth), "socket: pass socket_depth to ms_check()");
-        assert(socket_depth >= MS_SOCKET_KEEPOUT,
-               str("socket: depth ", socket_depth, " is under the keep-out ", MS_SOCKET_KEEPOUT, " (male end + 1 mm)"));
-        fd = is_undef(feature_depth) ? socket_depth : feature_depth;
-        assert(fd >= MS_SOCKET_KEEPOUT,
-               str("socket: a feature starts ", fd, " below the mouth; nothing may start above ", MS_SOCKET_KEEPOUT));
-        assert(ms_mouth_chamfer >= 0.5, "socket: mouth chamfer under 0.5 mm will bind on elephant foot");
-    }
-
-    // stacking rule
-    if (ms_has("stacks")) {
-        assert(!is_undef(body_h), "stacks: pass body_h to ms_check()");
-        assert(ms_is_units(body_h),
-               str("stacks: body ", body_h, " is not a whole number of units (", MS_UNIT_H, "); nearest ", round(body_h / MS_UNIT_H) * MS_UNIT_H));
-        if (!is_undef($ms_units))
-            assert(ms_near(body_h, ms_units($ms_units), 0.05),
-                   str("stacks: body ", body_h, " does not match the declared ", $ms_units, " units"));
-    }
-
-    // marble passage, on unless the part says otherwise
-    if (ms_has("marble") || is_undef($ms_features) || !ms_has("no-marble"))
-        assert(passage >= marble + 1.5,
-               str("marble: passage ", passage, " must be at least marble + 1.5 = ", marble + 1.5));
-}
+module ms_keepout_bore(s)  { translate([s[0], s[1], s[2]]) mirror([0, 0, s[3] < 0 ? 0 : 1])
+                             cylinder(h = MS_SOCKET_KEEPOUT, d = ms_female_id - 0.1); }
+module ms_keepout_wall(s)  { translate([s[0], s[1], s[2]]) mirror([0, 0, s[3] < 0 ? 0 : 1])
+                             translate([0, 0, ms_max_lead_in + 0.05]) difference() {
+                                 cylinder(h = MS_SOCKET_KEEPOUT - ms_max_lead_in - 0.1, d = ms_female_id + 2 * ms_wall - 0.1);
+                                 translate([0, 0, -1]) cylinder(h = MS_SOCKET_KEEPOUT + 2, d = ms_female_id + 0.1);
+                             } }

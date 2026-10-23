@@ -9,4 +9,6 @@ for f in parts/*/*.scad; do
   openscad -o "out/$name.stl" "$f"
 done
 echo "== fit coupon"
-openscad -o out/fit_coupon.stl -D 'part="coupon"' parts/vortex/vortex.scad
+openscad -o out/fit_coupon.stl -D 'which="coupon"' parts/vortex/vortex.scad
+echo "== keep-out"
+scripts/check_keepout.sh
