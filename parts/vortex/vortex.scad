@@ -65,6 +65,8 @@ psi    = 90 + entry_deg;                     // heading angle of D
 sh_a   = r_lip_in * sin(entry_deg);
 s_len  = -sh_a + sqrt(sh_a * sh_a + tube_pr * tube_pr - r_lip_in * r_lip_in);   // tube axis to E along D
 p_pt   = [e_pt[0] - s_len * dvec[0], e_pt[1] - s_len * dvec[1]];
+tube_x = p_pt[0];
+tube_y = p_pt[1];
 
 // marble centre path in the vertical plane of the trough: s along D from the tube axis, z up
 phi_e  = 270 - trough_deg;
@@ -89,7 +91,7 @@ ms_check_units(z_shoulder, units);
 
 // socket mouths for scripts/check_keepout.sh: [x, y, z_mouth, dir]
 ms_sockets = [[0, 0, 0, -1]];
-ms_males   = [[p_pt[0], p_pt[1], z_tip, 1]];
+ms_males   = [[tube_x, tube_y, z_tip, 1]];
 
 module bowl_outer() {
     union() {
@@ -134,7 +136,7 @@ module upper_profile() {
 // (r, z) profile of the wedge: bowl cone on the inside, shallow cone underneath
 module support_profile() {
     polygon([[r_cone(z_sup_low) - 0.3, z_sup_low], [r_block_out, z_rim - 0.01],
-             [r_lip_in + 0.05, z_rim - 0.01], [r_cone(z_rim) - 0.3, z_rim]]);
+             [r_cone(z_rim - 0.01) - 0.3, z_rim - 0.01]]);
 }
 
 module inlet_block() {
