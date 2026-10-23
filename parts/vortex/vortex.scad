@@ -12,7 +12,8 @@ female_id = ms_female_id;
 male_hi   = ms_male_hi;
 male_lo   = ms_male_lo;
 male_flats = ms_flats;
-conn_len  = ms_conn_len;
+conn_len  = ms_female_depth;   // socket depth
+male_len  = ms_male_len;
 conn_wall = ms_wall;
 bore      = ms_bore;
 
@@ -24,7 +25,7 @@ lip_h          = 12;    // vertical lip above the cone rim
 
 // inlet: vertical socket just inside the lip; marble drops down a shaft onto a
 // 45 deg ramp and leaves through a side window along the rim tangent.
-inlet_h        = conn_len + 6;  // socket height above the lip top
+inlet_h        = conn_len + 4;  // socket height above the lip top
 ramp_deg       = 45;
 window_h       = 26;
 
@@ -34,13 +35,13 @@ sock_r     = female_id/2 + conn_wall;
 cone_r_out = bowl_d/2;
 cone_r_in  = bore/2 + 2;
 cone_h     = (cone_r_out - cone_r_in) * tan(cone_deg);
-spigot_h   = conn_len + 2;
+spigot_h   = male_len;
 z_rim      = spigot_h + cone_h;          // top of cone, bottom of lip
 z_lip      = z_rim + lip_h;              // top of lip
 r_axis     = cone_r_out - sock_r + 0.6;  // socket wall merges into the lip
 z_cone_at_axis = spigot_h + (r_axis - cone_r_in) * tan(cone_deg);
 
-module male_spigot(h) { ms_male_spigot(h = h, bore = 0.01); }
+module male_spigot(h) { mirror([0,0,1]) translate([0,0,-h]) ms_male_spigot(h = h, bore = 0.01); }
 
 module bowl_outer() {
     union() {
@@ -74,7 +75,7 @@ module inlet_cuts() {
     z_floor = z_cone_at_axis + 2.5;          // window sill, just above the cone
     translate([r_axis, 0, 0]) {
         // set's male end seats here
-        translate([0,0,z_top - conn_len]) cylinder(h = conn_len + 1, r = female_id/2);
+        translate([0,0,z_top - conn_len]) ms_female_bore(conn_len);
         // drop shaft with a sloped floor: high on -y, low at the window (+y)
         hull() {
             translate([0, -bore/2, z_floor + bore * tan(ramp_deg)]) cylinder(h = 0.1, d = 0.1);
@@ -91,7 +92,7 @@ module vortex() {
     difference() {
         union() {
             difference() {
-                union() { male_spigot(spigot_h + 0.5); bowl_outer(); }
+                union() { male_spigot(spigot_h); translate([0,0,spigot_h-0.01]) cylinder(h=0.02, d=male_hi); bowl_outer(); }
                 bowl_inside();
             }
             socket_body();

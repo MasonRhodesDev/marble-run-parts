@@ -11,7 +11,7 @@ Marble Genius; published parts made for that name have fit so far.
 | Male end, across arcs | 23.60 mm | round with alternating flats |
 | Male end, across flats | 22.90 mm | six-ish flats, only the arcs touch |
 | Female mouth bore | 23.23 mm | round |
-| Engagement length | ~18 mm | |
+| Male end height | 6.4 mm | fine chamfer at the tip |
 | Marble | 16 mm assumed | confirm |
 
 The friction fit comes from the male arcs being 0.37 mm over the female bore
@@ -29,7 +29,7 @@ Slicer profile in use applies +0.15 mm to holes and -0.05 mm to contours
 | Diverter outlets, Printables 163082 | female 23.75 | ~23.9 | barely too loose on the set's male |
 | Diverter paddle, same model | | | loose by design, works |
 | Joyin bowl spigot, Printables 1700829, scaled 0.926 | male 23.6 round | ~23.5 | too small, do not reuse Joyin parts |
-| Fit coupon v1, this repo | female 23.35 / male 23.65 arcs, 22.90 flats | ~23.5 / ~23.55 | printing |
+| Fit coupon v1, this repo | female 23.35 / male 23.65 arcs, 22.90 flats, both 18 long | ~23.5 / ~23.55 | socket: perfect at the top end, too tight at the plate end (elephant foot); spigot: fits very well. Lengths cut to 6.5 / 8 and mouth chamfers added in v2 |
 
 Update this table after every fit test. The library constants in
 `lib/marble_set.scad` must match the last row that passed.
