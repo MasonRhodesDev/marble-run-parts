@@ -30,5 +30,5 @@ module tube() {
     }
 }
 
-ms_check(body_h = body_h, socket_depth = body_h - seat_h, passage = ms_bore);
+ms_check(body_h = body_h, socket_depth = body_h - seat_h, feature_depth = body_h - seat_h, passage = ms_bore);
 tube();

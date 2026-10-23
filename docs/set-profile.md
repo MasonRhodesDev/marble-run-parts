@@ -53,11 +53,14 @@ Update this table after every fit test. The library constants in
    `ms_fit_coupon()`) before any part over an hour.
 4. 100% infill for load-bearing arms, 3 walls otherwise. Marble passages at
    least marble + 1.5 mm.
-5. A male end extends at least 1 mm up into the body it belongs to
+5. A female socket is plain bore for the exposed male end height plus 1 mm
+   clearance (7.4 mm) below its mouth before any other feature: no seat,
+   window, opening or change of diameter in that zone.
+6. A male end extends at least 1 mm up into the body it belongs to
    (`ms_male_overlap`, enforced by an `assert` in the library). The socket
    floor sits on top of that overlap, so the joint is never a single wall of
    layers.
-6. Make the body height a whole number of units (`ms_units(n)`, 34.91 mm
+7. Make the body height a whole number of units (`ms_units(n)`, 34.91 mm
    each) so a custom part sits level with official pieces in the same row.
    Body means spigot shoulder to socket mouth; the male end hides inside the
    socket below and adds nothing to the stack. Only parts with no male end
@@ -76,8 +79,9 @@ ms_check(body_h = ..., socket_depth = ..., passage = ms_bore);
 ```
 
 Rules fire only for declared features: `spigot` (1 mm overlap into the body,
-flats below arcs, 2.2 mm wall at the flats), `socket` (depth covers the male
-end plus lead-in, mouth chamfer at least 0.5), `stacks` (body is a whole
+flats below arcs, 2.2 mm wall at the flats), `socket` (plain bore for the male end
+plus 1 mm, 7.4 mm, below the mouth before any seat, window or opening;
+mouth chamfer at least 0.5), `stacks` (body is a whole
 number of units and matches `$ms_units`), `marble` (passage at least marble
 plus 1.5; on by default, declare `no-marble` to skip). A failed rule aborts
 the build with the offending number and the nearest valid one, so

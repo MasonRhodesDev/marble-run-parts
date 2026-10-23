@@ -15,6 +15,8 @@ MS_WALL        = 2.2;     // body wall, and the male end at its flats
 MS_MALE_BORE   = 18.5;    // MS_MALE_LO minus two walls: the set's marble passage
 MS_BODY_OD     = 27.63;   // MS_FEMALE_ID plus two walls
 MS_MARBLE_D    = 16;      // assumed, confirm
+MS_SOCKET_KEEPOUT = MS_MALE_LEN + 1; // from the socket mouth, nothing but plain
+                          // bore for this depth: the male end plus 1 mm clearance
 // Official sockets: the 23.23 bore runs the whole body depth and ends in a
 // seat ring about one wall wide where the male end of the piece above lands.
 
@@ -100,7 +102,10 @@ module ms_fit_coupon() {
 //
 // Features:
 //   "spigot"  has a male end          -> overlap >= 1, flats below arcs, wall >= 2.2
-//   "socket"  has a female socket     -> depth >= male end + lead-in, mouth chamfer >= 0.5
+//   "socket"  has a female socket     -> plain bore for MS_SOCKET_KEEPOUT below the
+//                                        mouth before any other feature (seat, window,
+//                                        opening); pass feature_depth = distance from
+//                                        the mouth to the nearest such feature
 //   "stacks"  sits in a stack         -> body_h is a whole number of units
 //   "marble"  a marble passes through -> passage >= marble + 1.5 (default on)
 // ---------------------------------------------------------------------------
@@ -109,7 +114,7 @@ function ms_has(f) = !is_undef($ms_features) && len([for (x = $ms_features) if (
 function ms_near(a, b, tol = 0.05) = abs(a - b) <= tol;
 function ms_is_units(h) = ms_near(h / MS_UNIT_H, round(h / MS_UNIT_H), 0.002);
 
-module ms_check(body_h = undef, socket_depth = undef, passage = ms_bore, marble = MS_MARBLE_D) {
+module ms_check(body_h = undef, socket_depth = undef, feature_depth = undef, passage = ms_bore, marble = MS_MARBLE_D) {
     assert(!is_undef($ms_features), "declare $ms_features before ms_check()");
 
     // spigot rules
@@ -123,8 +128,11 @@ module ms_check(body_h = undef, socket_depth = undef, passage = ms_bore, marble 
     // socket rules
     if (ms_has("socket")) {
         assert(!is_undef(socket_depth), "socket: pass socket_depth to ms_check()");
-        assert(socket_depth >= MS_MALE_LEN + ms_mouth_chamfer,
-               str("socket: depth ", socket_depth, " is shallower than the male end plus lead-in ", MS_MALE_LEN + ms_mouth_chamfer));
+        assert(socket_depth >= MS_SOCKET_KEEPOUT,
+               str("socket: depth ", socket_depth, " is under the keep-out ", MS_SOCKET_KEEPOUT, " (male end + 1 mm)"));
+        fd = is_undef(feature_depth) ? socket_depth : feature_depth;
+        assert(fd >= MS_SOCKET_KEEPOUT,
+               str("socket: a feature starts ", fd, " below the mouth; nothing may start above ", MS_SOCKET_KEEPOUT));
         assert(ms_mouth_chamfer >= 0.5, "socket: mouth chamfer under 0.5 mm will bind on elephant foot");
     }
 

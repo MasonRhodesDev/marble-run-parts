@@ -111,6 +111,6 @@ module coupon() { ms_fit_coupon(); }
 
 if (part == "coupon") coupon();
 else {
-    ms_check(body_h = z_lip + inlet_h - spigot_h, socket_depth = conn_len, passage = bore);
+    ms_check(body_h = z_lip + inlet_h - spigot_h, socket_depth = conn_len, feature_depth = conn_len, passage = bore); // seat shoulder is the first feature
     vortex();
 }
