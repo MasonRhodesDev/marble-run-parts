@@ -24,6 +24,9 @@ MS_MALE_BORE   = MS_MALE_LO - 2 * MS_WALL;   // 18.5: the set's marble passage
 MS_BODY_OD     = MS_FEMALE_ID + 2 * MS_WALL; // 27.9 if the walls are concentric
 MS_MARBLE_D    = 16;      // assumed; measure the largest of ten
 MS_SOCKET_KEEPOUT = MS_MALE_LEN + 1;         // 7.4: plain bore below a mouth before any feature
+// Male keep-out: from the tip down through the overlap and 1 mm beyond, the
+// male end is an uninterrupted ring with a clear bore. No window, cut or
+// feature may touch it. Length is computed from the CAD values below.
 
 // ---------------------------------------------------------------------------
 // CAD targets for printed parts
@@ -46,6 +49,7 @@ ms_seat_h        = ms_wall + ms_male_overlap; // floor under a socket that ends 
 ms_marble_clear  = 1.5;     // passage must exceed the marble by this
 
 function ms_units(n) = n * MS_UNIT_H;
+ms_male_keepout = ms_male_len + ms_male_overlap + 1;   // 8.5 from the tip
 
 // ---------------------------------------------------------------------------
 // Constant relations, checked once at include time. A part cannot break
@@ -135,11 +139,20 @@ module ms_fit_coupon() {
 }
 
 // ---------------------------------------------------------------------------
-// Geometric keep-out declaration. A part lists its socket mouths as
+// Geometric keep-out declarations. A part lists its connector ends as
 //   ms_sockets = [[x, y, z_mouth, dir], ...]   dir = +1 mouth faces +z, -1 faces -z
-// scripts/check_keepout.sh renders two tests per socket against the part:
-// nothing inside the bore, and the full wall present, for MS_SOCKET_KEEPOUT.
+//   ms_males   = [[x, y, z_tip,   dir], ...]   dir = +1 tip points +z,  -1 points -z
+// scripts/check_keepout.sh renders two tests per end against the part:
+// nothing inside the bore, and the full wall ring present, for the keep-out
+// length (MS_SOCKET_KEEPOUT below a mouth, ms_male_keepout below a tip).
 // ---------------------------------------------------------------------------
+module ms_male_keepout_bore(m) { translate([m[0], m[1], m[2]]) mirror([0, 0, m[3] > 0 ? 1 : 0])
+                                 translate([0, 0, 0.2]) cylinder(h = ms_male_keepout - 0.2, d = ms_bore - 0.2); }
+module ms_male_keepout_wall(m) { translate([m[0], m[1], m[2]]) mirror([0, 0, m[3] > 0 ? 1 : 0])
+                                 translate([0, 0, ms_male_chamfer + 0.2]) difference() {
+                                     cylinder(h = ms_male_keepout - ms_male_chamfer - 0.2, d = ms_male_lo - 0.2);
+                                     translate([0, 0, -1]) cylinder(h = ms_male_keepout + 2, d = ms_bore + 0.2);
+                                 } }
 module ms_keepout_bore(s)  { translate([s[0], s[1], s[2]]) mirror([0, 0, s[3] < 0 ? 0 : 1])
                              cylinder(h = MS_SOCKET_KEEPOUT, d = ms_female_id - 0.1); }
 module ms_keepout_wall(s)  { translate([s[0], s[1], s[2]]) mirror([0, 0, s[3] < 0 ? 0 : 1])

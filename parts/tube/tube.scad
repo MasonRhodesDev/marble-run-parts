@@ -15,8 +15,9 @@ z_body   = ms_male_len;                 // shoulder: body starts here
 z_mouth  = z_body + body_h;             // socket mouth, top of the print
 sock_h   = body_h - ms_seat_h;          // socket runs the body depth down to a floor
 
-// socket mouths for scripts/check_keepout.sh: [x, y, z_mouth, dir]
+// connector ends for scripts/check_keepout.sh: [x, y, z, dir]
 ms_sockets = [[0, 0, z_mouth, +1]];
+ms_males   = [[0, 0, 0, -1]];
 
 ms_check_units(body_h, units);
 

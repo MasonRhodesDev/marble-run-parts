@@ -74,7 +74,11 @@ Update this table after every fit test. The library constants in
 6. A male end extends at least 1 mm up into the body it belongs to, as the
    official piece does (`ms_male_overlap`, asserted). Where a socket ends
    inside a part, its floor is one wall plus that overlap thick.
-7. Make the body height a whole number of units (`ms_units(n)`, 34.91 mm
+7. A male end is an uninterrupted ring with a clear bore from its tip down
+   through the overlap and 1 mm beyond (8.5 mm, `ms_male_keepout`). No
+   window, cut or feature may touch that zone. Verified geometrically like
+   the socket keep-out; parts list male tips in `ms_males`.
+8. Make the body height a whole number of units (`ms_units(n)`, 34.91 mm
    each) so a custom part sits level with official pieces in the same row.
    Body means spigot shoulder to socket mouth; the male end hides inside the
    socket below and adds nothing to the stack. Only parts with no male end
@@ -89,12 +93,13 @@ depth, keep-out and lead-in; `ms_passage` asserts marble clearance;
 `ms_check_units(body_h, units)` asserts the stacking pitch. Relations between
 library constants are asserted once at include time.
 
-What a part draws around a socket cannot be seen by those asserts, so the
+What a part draws around a connector cannot be seen by those asserts, so the
 build also runs `scripts/check_keepout.sh`: every part lists its socket
-mouths in `ms_sockets = [[x, y, z, dir], ...]` and exposes `module part()`,
-and the script renders two probes per socket against the part, one that must
-find nothing inside the bore and one that must find the full wall ring, for
-the keep-out depth. A non-empty probe fails the build. Rules the library
+mouths in `ms_sockets = [[x, y, z, dir], ...]` and its male tips in
+`ms_males = [[x, y, z, dir], ...]`, exposes `module part()`, and the script
+renders two probes per end against the part, one that must find nothing
+inside the bore and one that must find the full wall ring, for the keep-out
+length of that end. A non-empty probe fails the build. Rules the library
 cannot check (orientation, infill, supports) are advice in this file.
 
 ## Finding published parts
