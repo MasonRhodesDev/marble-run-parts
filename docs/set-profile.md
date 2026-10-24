@@ -66,7 +66,9 @@ Update this table after every fit test. The library constants in
 3. Print the fit coupon (`part="coupon"` in `parts/vortex/vortex.scad`, or
    `ms_fit_coupon()`) before any part over an hour.
 4. 100% infill for load-bearing arms, 3 walls otherwise. Marble passages at
-   least marble + 1.5 mm.
+   least marble + 1.5 mm. Always slice with a forced outer brim (12 mm);
+   an automatic brim skipped a 111 mm part standing on a 28 mm socket and it
+   detached.
 5. A female socket is plain bore for the exposed male end height plus 1 mm
    clearance (7.4 mm) below its mouth before any other feature: no seat,
    window, opening or change of diameter in that zone. Asserted on the drawn
