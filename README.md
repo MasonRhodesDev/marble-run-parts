@@ -4,8 +4,6 @@ Connector spec, OpenSCAD library and custom parts for the translucent tube
 marble run sets sold under names like Marble Genius, plus a log of published
 models that fit them.
 
-- `docs/set-profile.md`: measured connector dimensions, print tolerances, fit log.
-- `docs/compatible-models.md`: third-party models that fit (or do not), with links.
 - `lib/marble_set.scad`: the connector as OpenSCAD modules. Every part includes it.
 - `parts/<name>/`: our designs. First one is a mid-run vortex.
 - `scripts/build.sh`: renders every part to `out/*.stl` and runs the keep-out test (needs `openscad`).
@@ -26,8 +24,8 @@ scripts/preview.sh parts/vortex/vortex.scad vortex.png iso
 scripts/preview.sh out/vortex.stl section.png section-y=0
 ```
 
-Print `out/fit_coupon.stl` first on any new printer or filament and record the
-result in `docs/set-profile.md` before printing a full part.
+Print `out/fit_coupon.stl` first on any new printer or filament before printing
+a full part.
 
 ## Designing a new part
 

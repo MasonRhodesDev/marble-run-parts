@@ -1,9 +1,4 @@
 #!/usr/bin/env bash
-# Geometric keep-out test for every part that declares ms_sockets / ms_males.
-# For each connector end: (1) nothing of the part may lie inside the bore for
-# the keep-out length; (2) the full wall ring must be present there (no
-# windows or cuts). Fails if either rendered test volume is non-empty.
-# A part with neither declaration is reported and skipped. Needs openscad.
 set -uo pipefail
 cd "$(dirname "$0")/.."
 tmp=$(mktemp -d); fail=0
