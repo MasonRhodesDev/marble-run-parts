@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# preview.sh <file.scad|file.stl> <out.png> [iso|top|section-x=<mm>|section-y=<mm>]
-# Renders a PNG with openscad. "section-x=40" cuts away x>40 so you can see inside.
 set -euo pipefail
 in=$1; out=$2; view=${3:-iso}
 tmp=$(mktemp --suffix=.scad)

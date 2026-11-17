@@ -1,21 +1,14 @@
-// Straight tube, one set unit tall: the official base piece, drawn from the
-// measured connector. Also the reference consumer of the library.
-//
-// Drawn in PRINT orientation: male end down on the plate, socket mouth up.
-// In the run it is inverted (male end up). Needs a brim on the spigot.
-
 include <../../lib/marble_set.scad>;
 
-units = 1;              // body height in set units
+units = 1;
 $fn = 96;
 
 body_h   = ms_units(units);
 body_od  = ms_female_id + 2 * ms_wall;
-z_body   = ms_male_len;                 // shoulder: body starts here
-z_mouth  = z_body + body_h;             // socket mouth, top of the print
-sock_h   = body_h - ms_seat_h;          // socket runs the body depth down to a floor
+z_body   = ms_male_len;
+z_mouth  = z_body + body_h;
+sock_h   = body_h - ms_seat_h;
 
-// connector ends for scripts/check_keepout.sh: [x, y, z, dir]
 ms_sockets = [[0, 0, z_mouth, +1]];
 ms_males   = [[0, 0, 0, -1]];
 
